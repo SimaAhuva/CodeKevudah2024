@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form</title>
+    <style>
+        /* CSS styles for better appearance */
+        #budgetLabel {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<h2 style="text-align: center;">Please fill out the following questionnaire:</h2>
+<form action="/form" method="get"
+      style="width: 30%; margin: 20px auto 70px auto; border: solid blue; padding: 40px;">
+    <label for="name"><strong>Name:</strong></label>
+    <input type="text" id="name" name="name" placeholder="Enter Your Name" required>
+    <br><br>
+    <label for="email"><strong>Email:</strong></label>
+    <input type="email" id="email" name="email" placeholder="Enter Your Email Address" required>
+    <br><br>
+    <label for="gender"><strong>Gender:</strong></label>
+    <input type="text" id="gender" name="gender" placeholder="Boy or Girl" required>
+    <br><br>
+    <label for="coedVsNot"><strong>Co-ed or separate:</strong></label>
+    <input type="text" id="coedVsNot" name="coedVsNot" placeholder="Enter Y or N" pattern="[YyNn]" title="Enter Y or N" required>
+    <br><br>
+    <!-- Add a label to display the current budget value -->
+    <label for="budget" id="budgetLabel"><strong>Budget:</strong> $<span id="budgetValue">1000</span></label>
+    <br>
+    <!-- Use a range input (slider) for budget selection -->
+    <input type="range" id="budget" name="budget" min="1000" max="3000" step="10" value="1000" required>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    // Get references to the budget elements
+    const budgetSlider = document.getElementById('budget');
+    const budgetValue = document.getElementById('budgetValue');
+
+    // Update the budget value label when the slider value changes
+    budgetSlider.addEventListener('input', function() {
+        budgetValue.textContent = this.value;
+    });
+</script>
+</body>
+</html>
