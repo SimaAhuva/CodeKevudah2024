@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile & Camp Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        fieldset {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="button"],
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="button"]:hover,
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #submittedInfo {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile & Camp Selection</title>
+</head>
+<body>
+<h2>User Profile</h2>
+<form id="profileForm" onsubmit="submitForm(event)">
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" name="fullName" required><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <h2>Children Information</h2>
+    <div id="children">
+        <!-- Children will be dynamically added here -->
+    </div>
+    <button type="button" onclick="addChild()">Add Child</button><br><br>
+
+    <h2>Camp Selection</h2>
+    <div id="camps">
+        <!-- Camps will be dynamically filtered and displayed here -->
+    </div>
+
+    <h2>Payment Information</h2>
+    <label for="paymentType">Payment Type:</label>
+    <select id="paymentType" name="paymentType">
+        <option value="monthly">Monthly</option>
+        <option value="upfront">Upfront</option>
+    </select><br><br>
+
+    <label for="paymentStartDate">Payment Start Date:</label>
+    <input type="date" id="paymentStartDate" name="paymentStartDate" min="<%= getCurrentDate() %>" max="YYYY-07-01"><br><br>
+
+    <button type="button" onclick="connectToBank()">Connect to My Bank Account (Capital One)</button><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<div id="submittedInfo" style="display: none;">
+    <h2>Submitted Information</h2>
+    <p id="kidsInfo"></p>
+    <p id="totalAmount"></p>
+</div>
+
+<script>
+    function addChild() {
+        // Function to add a child input section dynamically
+        const childContainer = document.getElementById('children');
+        const childCount = childContainer.childElementCount + 1;
+        const childHTML = `
+        <fieldset>
+          <legend>Child ${childCount}</legend>
+          <label for="childName${childCount}">Name:</label>
+          <input type="text" id="childName${childCount}" name="childName${childCount}" required><br>
+
+          <label for="childAge${childCount}">Age:</label>
+          <input type="number" id="childAge${childCount}" name="childAge${childCount}" required><br>
+
+          <label for="childGender${childCount}">Gender:</label>
+          <select id="childGender${childCount}" name="childGender${childCount}" required>
+            <option value="girl">Girl</option>
+            <option value="boy">Boy</option>
+          </select><br>
+
+          <label for="childLocation${childCount}">Location:</label>
+          <select id="childLocation${childCount}" name="childLocation${childCount}" onchange="filterCamps(${childCount})" required>
+            <option value="New York">New York</option>
+            <option value="California">California</option>
+            <!-- Add more locations as needed -->
+          </select><br>
+
+          <label for="childCamp${childCount}">Camp:</label>
+          <select id="childCamp${childCount}" name="childCamp${childCount}" required>
+            <!-- Camp options will be dynamically populated based on location and gender -->
+          </select><br>
+
+        </fieldset>
+      `;
+        childContainer.insertAdjacentHTML('beforeend', childHTML);
+    }
+
+    function addChild() {
+        // Function to add a child input section dynamically
+        const childContainer = document.getElementById('children');
+        const childCount = childContainer.childElementCount + 1;
+        const childHTML = `
+    <fieldset>
+      <legend>Child ${childCount}</legend>
+      <label for="childName${childCount}">Name:</label>
+      <input type="text" id="childName${childCount}" name="childName${childCount}" required><br>
+
+      <label for="childAge${childCount}">Age:</label>
+      <input type="number" id="childAge${childCount}" name="childAge${childCount}" required><br>
+
+      <label for="childGender${childCount}">Gender:</label>
+      <select id="childGender${childCount}" name="childGender${childCount}" required>
+        <option value="girl">Girl</option>
+        <option value="boy">Boy</option>
+      </select><br>
+
+      <label for="childLocation${childCount}">Location:</label>
+      <select id="childLocation${childCount}" name="childLocation${childCount}" onchange="filterCamps(${childCount})" required>
+        <option value="New York">New York</option>
+        <option value="California">California</option>
+        <!-- Add more locations as needed -->
+      </select><br>
+
+      <label for="childCamp${childCount}">Camp:</label>
+      <select id="childCamp${childCount}" name="childCamp${childCount}" required>
+        <!-- Camp options will be dynamically populated based on location and gender -->
+      </select><br>
+
+    </fieldset>
+  `;
+        childContainer.insertAdjacentHTML('beforeend', childHTML);
+    }
+
+    function filterCamps(childNumber) {
+        const location = document.getElementById(`childLocation${childNumber}`).value;
+        const gender = document.getElementById(`childGender${childNumber}`).value;
+        const campDropdown = document.getElementById(`childCamp${childNumber}`);
+        // Dummy camp data (replace with actual data or fetch from server)
+        const campData = [
+            { name: 'Camp A', location: 'New York', gender: 'girl', tuition: 1000, website: 'http://camp-a.com' },
+            { name: 'Camp B', location: 'California', gender: 'boy', tuition: 1200, website: 'http://camp-b.com' },
+            { name: 'Camp C', location: 'New York', gender: 'coed', tuition: 1500, website: 'http://camp-c.com' },
+            // Add more camp data as needed
+        ];
+        // Filter camps based on location and gender
+        const filteredCamps = campData.filter(camp => camp.location === location && (camp.gender === gender || camp.gender === 'coed'));
+        // Clear previous options
+        campDropdown.innerHTML = '';
+        // Populate camps dropdown
+        filteredCamps.forEach(camp => {
+            const option = document.createElement('option');
+            option.text = camp.name;
+            option.value = camp.name;
+            campDropdown.add(option);
+        });
+    }
+
+    function connectToBank() {
+        // Function to redirect to Capital One bank account page (replace with actual link)
+        window.location.href = 'https://www.capitalone.com/';
+    }
+
+    function submitForm(event) {
+        event.preventDefault();
+        const form = document.getElementById('profileForm');
+        const formData = new FormData(form);
+        let kidsInfo = '';
+        let totalAmount = 0;
+        for (const pair of formData.entries()) {
+            if (pair[0].includes('childName')) {
+                kidsInfo += `${pair[1]} is going to ${formData.get(pair[0].replace('Name', 'Camp'))}.<br>`;
+                const campName = formData.get(pair[0].replace('Name', 'Camp'));
+                const campTuition = getCampTuition(campName);
+                totalAmount += campTuition;
+            }
+        }
+        document.getElementById('kidsInfo').innerHTML = kidsInfo;
+        document.getElementById('totalAmount').innerHTML = `Total Amount Owed: $${totalAmount}`;
+        document.getElementById('submittedInfo').style.display = 'block';
+    }
+
+    function getCampTuition(campName) {
+        // Dummy function to get tuition based on camp name (replace with actual logic)
+        const campData = [
+            { name: 'Camp A', tuition: 1000 },
+            { name: 'Camp B', tuition: 1200 },
+            { name: 'Camp C', tuition: 1500 },
+            // Add more camp data as needed
+        ];
+        const camp = campData.find(camp => camp.name === campName);
+        return camp ? camp.tuition : 0;
+    }
+
+</script>
+</body>
+</html>
